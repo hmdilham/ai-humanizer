@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI Detector & Humanizer v2.1 — Professional Edition</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Library untuk export DOCX -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-top">
+        <h1>🔍 AI Detector & Humanizer <span class="version">v2.1 Pro</span></h1>
+        <p class="subtitle">Advanced Heuristics • Multi-Tone Paraphrasing • Multi-Format Export</p>
+      </div>
+      <div class="top-controls">
+        <input id="google-key" type="password" placeholder="Google AI Studio API Key (opsional)"/>
+        <select id="model-select">
+          <option value="gemini-2.5-flash">Gemini 2.5 Flash ⚡</option>
+          <option value="gemini-2.5-pro">Gemini 2.5 Pro 🌟</option>
+          <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+          <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+        </select>
+        <select id="tone-select">
+          <option value="academic">🎓 Academic (Mahasiswa→Dosen)</option>
+          <option value="business">💼 Business Professional</option>
+          <option value="formal">📄 Formal General</option>
+          <option value="casual">😊 Casual (Anti-Detection)</option>
+        </select>
+        <button id="clear-key" class="btn-secondary">🗑️ Hapus Key</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="pane left">
+        <div class="pane-header">
+          <h2>📝 Original Text</h2>
+          <span id="word-count" class="meta">0 words</span>
+        </div>
+        <textarea id="original" placeholder="Tempel teks yang ingin Anda analisis atau parafrase di sini...
+
+Contoh untuk Academic:
+- Essay, paper, laporan penelitian
+- Tugas kuliah, artikel ilmiah
+
+Contoh untuk Business:
+- Email profesional, proposal
+- Laporan bisnis, presentasi"></textarea>
+        <div class="controls">
+          <button id="detect-btn" class="btn-primary">🔍 Detect AI</button>
+          <button id="humanize-btn" class="btn-success">✨ Humanize</button>
+          <button id="swap-btn" class="btn-secondary" title="Tukar teks kiri/kanan">↔️</button>
+          <button id="clear-btn" class="btn-secondary">🗑️ Clear</button>
+        </div>
+        <div id="detection-result" class="result"></div>
+      </section>
+
+      <section class="pane right">
+        <div class="pane-header">
+          <h2>✨ Humanized Text</h2>
+          <span id="humanized-word-count" class="meta">0 words</span>
+        </div>
+        <textarea id="humanized" placeholder="Hasil parafrasa akan muncul di sini...
+
+🎓 Academic: Bahasa formal, sopan, akademis
+💼 Business: Profesional, clear, persuasif
+📄 Formal: Resmi, terstruktur
+😊 Casual: Natural, anti-AI detection"></textarea>
+        <div class="controls">
+          <button id="copy-btn" class="btn-primary">📋 Salin</button>
+          <div class="dropdown">
+            <button id="download-btn" class="btn-primary">💾 Download ▼</button>
+            <div class="dropdown-content">
+              <a href="#" id="download-txt">📄 Plain Text (.txt)</a>
+              <a href="#" id="download-docx">📘 Word Document (.docx)</a>
+              <a href="#" id="download-md">📝 Markdown (.md)</a>
+            </div>
+          </div>
+          <button id="redetect-btn" class="btn-secondary">🔄 Re-detect</button>
+        </div>
+        <div id="humanized-detection" class="result"></div>
+      </section>
+    </main>
+
+    <section class="info-panel">
+      <h3>📊 Tentang Mode Paraphrasing</h3>
+      <div class="info-grid">
+        <div class="info-card">
+          <h4>🎓 Academic Mode</h4>
+          <p><strong>Untuk:</strong> Tugas kuliah, paper, essay, laporan penelitian<br>
+          <strong>Gaya:</strong> Formal, objektif, sopan, menggunakan terminologi akademis<br>
+          <strong>Struktur:</strong> Logis, argumentatif, dengan transisi yang tepat</p>
+        </div>
+        <div class="info-card">
+          <h4>💼 Business Mode</h4>
+          <p><strong>Untuk:</strong> Email profesional, proposal, laporan bisnis<br>
+          <strong>Gaya:</strong> Profesional, persuasif, action-oriented<br>
+          <strong>Struktur:</strong> Clear, concise, result-focused</p>
+        </div>
+        <div class="info-card">
+          <h4>📄 Formal Mode</h4>
+          <p><strong>Untuk:</strong> Dokumen resmi, surat formal<br>
+          <strong>Gaya:</strong> Sangat formal, terstruktur, mengikuti konvensi<br>
+          <strong>Struktur:</strong> Sistematis, menggunakan bahasa baku</p>
+        </div>
+        <div class="info-card">
+          <h4>😊 Casual Mode</h4>
+          <p><strong>Untuk:</strong> Bypass AI detector dengan gaya natural<br>
+          <strong>Gaya:</strong> Conversational, informal, spontan<br>
+          <strong>Struktur:</strong> High burstiness, variasi ekstrem</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="export-info-panel">
+      <h3>📥 Export Formats</h3>
+      <div class="info-grid">
+        <div class="info-card">
+          <h4>📄 Plain Text (.txt)</h4>
+          <p>Format murni tanpa formatting. Cocok untuk: copy-paste ke platform lain, backup sederhana.</p>
+        </div>
+        <div class="info-card">
+          <h4>📘 Word Document (.docx)</h4>
+          <p>Format Microsoft Word dengan styling. Cocok untuk: tugas kuliah, dokumen formal, edit lanjutan.</p>
+        </div>
+        <div class="info-card">
+          <h4>📝 Markdown (.md)</h4>
+          <p>Format Markdown dengan syntax. Cocok untuk: GitHub, blog, dokumentasi teknis.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <small>
+        v2.1 Professional Edition • By @hmdilham • 
+        Dibuat untuk keperluan edukasi & bisnis • 
+        Gunakan secara etis • 
+        <a href="#" id="about-link">Tentang Algoritma</a>
+      </small>
+    </footer>
+  </div>
+
+  <!-- Modal info -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>🔬 Tentang Algoritma Deteksi</h2>
+      <p>Detector ini menggunakan 8+ metrik heuristik yang meniru cara kerja GPTZero:</p>
+      <ol>
+        <li><strong>Perplexity Simulation</strong>: Menghitung prediktabilitas bigram/trigram</li>
+        <li><strong>Burstiness Analysis</strong>: Standar deviasi panjang kalimat (key metric!)</li>
+        <li><strong>Lexical Diversity</strong>: Type-Token Ratio</li>
+        <li><strong>Syntactic Complexity</strong>: Rata-rata depth clause</li>
+        <li><strong>Transition Overuse</strong>: Frekuensi kata transisi formal</li>
+        <li><strong>Punctuation Regularity</strong>: Konsistensi tanda baca</li>
+        <li><strong>Semantic Coherence</strong>: Overlap kata antar kalimat</li>
+        <li><strong>N-gram Predictability</strong>: Deteksi pola umum AI</li>
+      </ol>
+      <hr style="margin:16px 0;border-color:var(--border)">
+      <h3>🎯 Tips Penggunaan:</h3>
+      <ul>
+        <li><strong>Academic Mode</strong>: Gunakan untuk tugas kuliah, paper. Tetap lolos plagiarism checker.</li>
+        <li><strong>Business Mode</strong>: Untuk email ke klien, proposal. Profesional tapi human.</li>
+        <li><strong>Formal Mode</strong>: Dokumen resmi yang butuh bahasa baku.</li>
+        <li><strong>Casual Mode</strong>: Untuk bypass AI detector dengan gaya natural.</li>
+      </ul>
+      <hr style="margin:16px 0;border-color:var(--border)">
+      <h3>📥 Export Formats:</h3>
+      <ul>
+        <li><strong>Plain Text</strong>: Murni teks, universal compatibility</li>
+        <li><strong>Word (.docx)</strong>: Format profesional dengan styling</li>
+        <li><strong>Markdown (.md)</strong>: Format untuk developer & blogger</li>
+      </ul>
+      <hr style="margin:16px 0;border-color:var(--border)">
+      <h3>🤖 Model Gemini:</h3>
+      <ul>
+        <li><strong>2.5 Flash</strong>: Tercepat, cocok daily use</li>
+        <li><strong>2.5 Pro</strong>: Quality terbaik untuk dokumen penting</li>
+      </ul>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
